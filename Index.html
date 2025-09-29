@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<link rel="icon" type="image/png" href="Horario_imagen.jpg">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Encargados Fin de Semana</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --primary-accent: #fd0000e5;
+        --secondary-accent: #bdbdc2;
+        --resting-color: #EE5253;
+        --feedback-color: #26DE81;
+        --text-dark: #2C3E50;
+        --text-medium: #636E72;
+        --text-light: #B2BEC3;
+        --bg-light: #FBFBFB;
+        --bg-body-start: #E8F0F7;
+        --bg-body-end: #DCE3EE;
+        --border-color: #EFEFEF;
+        --shadow-light: rgba(0,0,0,0.08);
+        --shadow-medium: rgba(0,0,0,0.15);
+        --vacation-color: #FF9F43;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-body-start);
+      background-image: linear-gradient(135deg, var(--bg-body-start) 0%, var(--bg-body-end) 100%);
+      margin: 0;
+      padding: 20px;
+      color: var(--text-dark);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      box-sizing: border-box;
+    }
+    .container {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 25px;
+      max-width: 980px;
+      width: 100%;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px var(--shadow-medium);
+      padding: 35px;
+      overflow: hidden;
+    }
+    .panel {
+        background-color: var(--bg-light);
+        border: 1px solid var(--border-color);
+        border-radius: 15px;
+        padding: 28px;
+        box-shadow: 0 6px 15px var(--shadow-light);
+        position: relative;
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    }
+    .panel:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px var(--shadow-medium);
+    }
+    .capture-button {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background-color: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(200, 200, 200, 0.5);
+        border-radius: 8px;
+        padding: 8px;
+        cursor: pointer;
+        color: var(--text-medium);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.1s ease;
+        z-index: 10;
+        font-weight: 600;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        width: 36px;
+        height: 36px;
+    }
+    .capture-button:hover {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-color: rgba(180, 180, 180, 0.7);
+        transform: translateY(-2px);
+    }
+    .capture-button:active {
+        transform: translateY(0);
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .capture-button svg {
+        width: 20px;
+        height: 20px;
+        fill: var(--text-medium);
+    }
+    h1 {
+      color: var(--primary-accent);
+      font-size: 2.5em;
+      margin-top: 0;
+      margin-bottom: 30px;
+      grid-column: span 2;
+      text-align: center;
+      font-weight: 800;
+      letter-spacing: -0.5px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+    }
+    h2 {
+      color: var(--text-dark);
+      font-size: 1.4em;
+      margin-top: 0;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid var(--primary-accent);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    h2 .emoji {
+        font-size: 1.2em;
+    }
+    h3 {
+        font-size: 1.2em;
+        color: var(--text-dark);
+        margin-top: 30px;
+        margin-bottom: 18px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    h3 .emoji {
+        font-size: 1em;
+    }
+    .date-range {
+      background-image: linear-gradient(45deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+      color: #ffffff;
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      margin: 20px 0;
+      text-align: center;
+      font-size: 1.1em;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      letter-spacing: 0.5px;
+    }
+    .shift-info {
+      margin-bottom: 25px;
+    }
+    .shift-day {
+      font-weight: 600;
+      margin: 15px 0;
+      display: flex;
+      align-items: center;
+      color: var(--text-medium);
+    }
+    .shift-day .emoji {
+        margin-right: 10px;
+        font-size: 1.3em;
+    }
+    .shift-day.rest-day {
+      color: var(--resting-color);
+      font-weight: 800;
+      font-size: 1.1em;
+      padding: 8px 0;
+      border-left: 5px solid var(--resting-color);
+      padding-left: 15px;
+      background-color: rgba(238, 82, 83, 0.08);
+      border-radius: 8px;
+    }
+    .shift-day.vacation-day {
+      color: var(--vacation-color);
+      font-weight: 800;
+      font-size: 1.1em;
+      padding: 8px 0;
+      border-left: 5px solid var(--vacation-color);
+      padding-left: 15px;
+      background-color: rgba(255, 159, 67, 0.08);
+      border-radius: 8px;
+    }
+    .shift-day.rest-day .emoji,
+    .shift-day.vacation-day .emoji {
+        margin-right: 15px;
+    }
+    .person-name {
+      font-weight: 800;
+      color: var(--text-dark);
+      margin-left: 5px;
+    }
+    .person-name.vacation {
+      color: var(--vacation-color);
+      text-decoration: line-through;
+    }
+    .info-text {
+        margin-left: 45px;
+        font-size: 0.95em;
+        color: var(--text-light);
+        margin-top: 5px;
+        display: block;
+        font-style: italic;
+    }
+    
+    .feedback-info {
+      padding: 0;
+      margin: 20px 0;
+    }
+    .feedback-item {
+      margin: 15px 0;
+      font-size: 1em;
+      color: var(--text-medium);
+      display: flex;
+      align-items: center;
+    }
+    .feedback-item .emoji {
+        margin-right: 10px;
+        font-size: 1.2em;
+    }
+    .feedback-item strong {
+        color: var(--text-dark);
+        width: 130px;
+        display: inline-block;
+        font-weight: 700;
+    }
+    .rotation-list, .summary-list, .vacation-list {
+      list-style-type: none;
+      padding-left: 0;
+      font-size: 0.95em;
+      color: var(--text-medium);
+    }
+    .rotation-list li, .summary-list li, .vacation-list li {
+      margin-bottom: 12px;
+      padding-left: 30px;
+      position: relative;
+    }
+    .rotation-list li:before, .summary-list li:before {
+      content: "⭐";
+      position: absolute;
+      left: 0;
+      font-size: 1.1em;
+      line-height: 1;
+    }
+    .summary-list li:nth-child(1):before { content: "🏖️"; }
+    .summary-list li:nth-child(2):before { content: "📧"; }
+    .summary-list li:nth-child(3):before { content: "🔄"; }
+    .vacation-list li:before {
+      position: absolute;
+      left: 0;
+      font-size: 1.1em;
+      line-height: 1;
+    }
+
+    .change-form {
+      background-color: var(--bg-light);
+      border: 1px solid var(--border-color);
+      padding: 25px;
+      border-radius: 15px;
+      margin-top: 25px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .vacation-form {
+      background-color: var(--bg-light);
+      border: 1px solid var(--border-color);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 15px;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text-medium);
+      font-size: 0.95em;
+    }
+    .form-group input, .form-group select {
+      width: calc(100% - 20px);
+      padding: 10px;
+      border: 1px solid #D1D8E0;
+      border-radius: 6px;
+      font-size: 1em;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      background-color: #F8F9FA;
+      font-family: 'Inter', sans-serif;
+    }
+    .form-group input:focus, .form-group select:focus {
+        border-color: var(--primary-accent);
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        outline: none;
+    }
+    .save-btn {
+      background-image: linear-gradient(45deg, var(--primary-accent) 0%, var(--secondary-accent) 100%);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      display: block;
+      margin-top: 20px;
+      width: 100%;
+      font-size: 1.1em;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    }
+    .save-btn:hover {
+      background-image: linear-gradient(45deg, var(--secondary-accent) 0%, var(--primary-accent) 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+    .save-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    }
+    .vacation-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .vacation-controls button {
+      flex: 1;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.2s ease;
+    }
+    .add-btn {
+      background-color: var(--feedback-color);
+      color: white;
+    }
+    .clear-btn {
+      background-color: var(--resting-color);
+      color: white;
+    }
+    .vacation-controls button:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* Column specific styling */
+    .left-column {
+        grid-column: 1;
+    }
+    .right-column {
+        grid-column: 2;
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #333;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 4px;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        padding: 15px;
+      }
+      .container {
+        grid-template-columns: 1fr;
+        padding: 25px;
+        gap: 20px;
+        border-radius: 15px;
+      }
+      h1 {
+        grid-column: span 1;
+        font-size: 2.2em;
+        margin-bottom: 25px;
+      }
+      h2 {
+        font-size: 1.3em;
+        margin-bottom: 20px;
+      }
+      h3 {
+        font-size: 1.1em;
+        margin-top: 25px;
+      }
+      .panel {
+        padding: 22px;
+        border-radius: 12px;
+      }
+      .capture-button {
+          top: 10px;
+          right: 10px;
+          width: 32px;
+          height: 32px;
+          padding: 6px;
+      }
+      .capture-button svg {
+        width: 18px;
+        height: 18px;
+      }
+      .date-range {
+        padding: 10px 15px;
+        font-size: 1em;
+      }
+      .shift-day {
+        margin: 10px 0;
+        font-size: 0.95em;
+      }
+      .shift-day.rest-day,
+      .shift-day.vacation-day {
+        font-size: 1em;
+        padding: 6px 12px;
+      }
+      .info-text {
+        margin-left: 40px;
+        font-size: 0.9em;
+      }
+      .feedback-item {
+        margin: 10px 0;
+        font-size: 0.9em;
+      }
+      .feedback-item strong {
+        width: 110px;
+      }
+      .form-group {
+        margin-bottom: 15px;
+      }
+      .form-group input, .form-group select {
+        padding: 8px;
+        font-size: 0.95em;
+      }
+      .save-btn {
+        padding: 10px 15px;
+        font-size: 1em;
+      }
+      .rotation-list li, .summary-list li, .vacation-list li {
+        margin-bottom: 10px;
+        padding-left: 25px;
+      }
+      .vacation-controls {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Encargados Fin de Semana <span class="emoji">🗓️</span></h1>
+    
+    <div class="panel left-column" id="panelWeekend">
+        <button class="capture-button" onclick="copyPanelToClipboard('panelWeekend', 'Encargados fin de semana')" title="Copiar imagen">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z"/></svg>
+        </button>
+        <h2>Encargados Fin de Semana <span class="emoji">👨‍💻</span></h2>
+        <div class="date-range" id="weekendDates"></div>
+        
+        <div class="shift-info">
+            <div class="shift-day"><span class="emoji">📆</span> Sábado: <span class="person-name" id="saturdayName"></span></div>
+            <div class="shift-day"><span class="emoji">🗓️</span> Domingo: <span class="person-name" id="sundayName"></span></div>
+            <div class="shift-day rest-day"><span class="emoji">🏖️</span> Descansa: <span class="person-name" id="restingName"></span></div>
+            <div class="shift-day vacation-day" id="vacationInfo" style="display: none;"><span class="emoji">✈️</span> De vacaciones: <span class="person-name vacation" id="vacationName"></span></div>
+        </div>
+    </div>
+
+    <div class="panel right-column" id="panelChanges">
+        <button class="capture-button" onclick="copyPanelToClipboard('panelChanges', 'Gestión de vacaciones')" title="Copiar imagen">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z"/></svg>
+        </button>
+        <h2>Gestión de Vacaciones <span class="emoji">⛱️</span></h2>
+        
+        <div class="vacation-form">
+            <div class="form-group">
+                <label for="vacationPerson">Persona:</label>
+                <select id="vacationPerson">
+                    <option value="Marvin">Marvin</option>
+                    <option value="Eli">Eli</option>
+                    <option value="Juan">Juan</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="vacationStart">Fecha de inicio:</label>
+                <input type="date" id="vacationStart">
+            </div>
+            
+            <div class="form-group">
+                <label for="vacationEnd">Fecha de fin:</label>
+                <input type="date" id="vacationEnd">
+            </div>
+            
+            <div class="vacation-controls">
+                <button class="add-btn" onclick="addVacation()">Agregar Vacaciones</button>
+                <button class="clear-btn" onclick="clearVacations()">Limpiar Todo</button>
+            </div>
+        </div>
+        
+        <div class="vacation-section">
+            <h3>Vacaciones Programadas <span aria-hidden="true">📅</span></h3>
+            <ul class="vacation-list" id="vacationList">
+                <!-- Las vacaciones se cargarán dinámicamente -->
+            </ul>
+        </div>
+    </div>
+    
+    <div class="panel left-column" id="panelFeedback">
+        <button class="capture-button" onclick="copyPanelToClipboard('panelFeedback', 'Retroalimentaciones')" title="Copiar imagen">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z"/></svg>
+        </button>
+        <h2>Retroalimentaciones <span class="emoji">💬</span></h2>
+        <div class="date-range" id="feedbackDates"></div>
+        
+        <div class="feedback-info">
+            <div class="feedback-item"><span class="emoji">⬅️</span> <strong>Última Retro:</strong> <span id="lastFeedback"></span></div>
+            <div class="feedback-item"><span class="emoji">🔜</span> <strong>Próxima Retro:</strong> <span id="nextFeedback"></span></div>
+        </div>
+    </div>
+
+    <div class="panel right-column" id="panelActions">
+        <button class="capture-button" onclick="copyPanelToClipboard('panelActions', 'Cambios manuales')" title="Copiar imagen">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M0 0h24v24H0z" fill="none"/><path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h8v8H8V8zm2 2v4h4v-4h-4z"/></svg>
+        </button>
+        <div class="changes-section">
+            <h3>Realizar cambios: <span class="emoji">✏️</span></h3>
+            <div class="change-form">
+                <div class="form-group">
+                    <label for="saturdayWorker">Sábado trabaja:</label>
+                    <input type="text" id="saturdayWorker" placeholder="Nombre del encargado">
+                </div>
+                <div class="form-group">
+                    <label for="sundayWorker">Domingo trabaja:</label>
+                    <input type="text" id="sundayWorker" placeholder="Nombre del encargado">
+                </div>
+                <button class="save-btn" onclick="saveManualChanges()">Guardar Cambios <span class="emoji">💾</span></button>
+            </div>
+        </div>
+        
+        <div class="changes-section">
+            <h3>Resumen Semanal: <span class="emoji">📈</span></h3>
+            <ul class="summary-list" id="weeklySummary">
+                <!-- El resumen se cargará dinámicamente -->
+            </ul>
+        </div>
+    </div>
+
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast"></div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script>
+    const workers = ["Marvin", "Eli", "Juan"];
+    
+    // Fecha de inicio de la rotación (primer sábado de 2025)
+    const START_DATE = new Date(2025, 0, 4); // 04/01/2025
+    
+    // Patrón de rotación base (3 semanas de ciclo)
+    const ROTATION_PATTERN = [
+        { sat: "Eli", sun: "Juan", rest: "Marvin" },
+        { sat: "Marvin", sun: "Eli", rest: "Juan" },
+        { sat: "Juan", sun: "Marvin", rest: "Eli" }
+    ];
+
+    // ÚLTIMA RETROALIMENTACIÓN REAL ENVIADA (viernes 19/09/2025 por Juan)
+    const LAST_RETRO_DATE = new Date(2025, 8, 19); // 19/09/2025
+    const LAST_RETRO_PERSON = "Juan";
+
+    // Orden de rotación de retroalimentaciones
+    const RETRO_ROTATION = ["Juan", "Eli", "Marvin"];
+
+    // Vacaciones (se cargan desde localStorage)
+    let vacationData = [];
+
+    // Cargar vacaciones desde localStorage al iniciar
+    function loadVacationsFromStorage() {
+        const savedVacations = localStorage.getItem('weekendRotationVacations');
+        if (savedVacations) {
+            vacationData = JSON.parse(savedVacations);
+        } else {
+            // Datos de ejemplo iniciales
+            vacationData = [
+                { person: "Eli", start: "2025-09-29", end: "2025-10-13" },
+                { person: "Juan", start: "2025-11-17", end: "2025-12-01" },
+                { person: "Marvin", start: "2025-12-08", end: "2025-12-22" }
+            ];
+            saveVacationsToStorage();
+        }
+    }
+
+    // Guardar vacaciones en localStorage
+    function saveVacationsToStorage() {
+        localStorage.setItem('weekendRotationVacations', JSON.stringify(vacationData));
+    }
+
+    function parseDate(dateString) {
+        if (dateString.includes('/')) {
+            const [day, month, year] = dateString.split('/').map(Number);
+            return new Date(year, month - 1, day);
+        } else {
+            // Formato YYYY-MM-DD
+            return new Date(dateString);
+        }
+    }
+
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    // Función para calcular la rotación para cualquier fecha futura
+    function calculateRotationForDate(targetSaturday) {
+        // Calcular la diferencia en semanas desde la fecha de inicio
+        const timeDiff = targetSaturday.getTime() - START_DATE.getTime();
+        const weekDiff = Math.floor(timeDiff / (1000 * 60 * 60 * 24 * 7));
+        
+        // Determinar el índice del patrón (ciclo de 3 semanas)
+        const patternIndex = weekDiff % ROTATION_PATTERN.length;
+        
+        // Obtener la rotación base
+        const baseRotation = {...ROTATION_PATTERN[patternIndex]};
+        
+        return baseRotation;
+    }
+
+    // FUNCIÓN CORREGIDA PARA CALCULAR RETROALIMENTACIONES
+    function getFeedbackInfo(currentSaturday) {
+        let lastFeedback = null;
+        let nextFeedback = null;
+
+        // Calcular el viernes correspondiente a esta semana
+        const currentFriday = new Date(currentSaturday);
+        currentFriday.setDate(currentSaturday.getDate() - 1);
+
+        // Encontrar la última retroalimentación que ya pasó
+        let lastRetroDate = new Date(LAST_RETRO_DATE);
+        let lastRetroPerson = LAST_RETRO_PERSON;
+        
+        // Avanzar hasta encontrar la última retro que ya pasó
+        while (lastRetroDate <= currentFriday) {
+            // Guardar la retro actual como última
+            lastFeedback = { date: new Date(lastRetroDate), person: lastRetroPerson };
+            
+            // Calcular la siguiente retro (2 semanas después)
+            const nextRetroDate = new Date(lastRetroDate);
+            nextRetroDate.setDate(lastRetroDate.getDate() + 14);
+            
+            // Determinar quién le toca en la siguiente retro
+            const currentIndex = RETRO_ROTATION.indexOf(lastRetroPerson);
+            const nextIndex = (currentIndex + 1) % RETRO_ROTATION.length;
+            const nextRetroPerson = RETRO_ROTATION[nextIndex];
+            
+            // Preparar para la siguiente iteración
+            lastRetroDate = nextRetroDate;
+            lastRetroPerson = nextRetroPerson;
+        }
+
+        // La próxima retroalimentación es la que encontramos que aún no ha pasado
+        nextFeedback = { date: lastRetroDate, person: lastRetroPerson };
+
+        return {
+            last: lastFeedback,
+            next: nextFeedback
+        };
+    }
+
+    // Función para verificar si una persona está de vacaciones en una fecha específica
+    function isPersonOnVacation(person, date) {
+        for (const vacation of vacationData) {
+            if (vacation.person === person) {
+                const startDate = parseDate(vacation.start);
+                const endDate = parseDate(vacation.end);
+                
+                // Ajustar la fecha de fin para incluir todo el día
+                endDate.setHours(23, 59, 59, 999);
+                
+                if (date >= startDate && date <= endDate) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Función para obtener las personas disponibles (no de vacaciones) en una fecha
+    function getAvailableWorkers(date) {
+        return workers.filter(person => !isPersonOnVacation(person, date));
+    }
+
+    // Función para ajustar la rotación teniendo en cuenta las vacaciones
+    function adjustRotationForVacations(baseRotation, date) {
+        const availableWorkers = getAvailableWorkers(date);
+        
+        // Si todos están disponibles, usar la rotación base
+        if (availableWorkers.length === 3) {
+            return {...baseRotation, adjusted: false};
+        }
+        
+        // Si hay 2 disponibles, redistribuir los turnos
+        if (availableWorkers.length === 2) {
+            // Determinar quién está de vacaciones
+            const personOnVacation = workers.find(person => !availableWorkers.includes(person));
+            
+            // Si la persona de vacaciones es la que debería descansar, simplemente asignar a los dos disponibles
+            if (baseRotation.rest === personOnVacation) {
+                return {
+                    sat: baseRotation.sat,
+                    sun: baseRotation.sun,
+                    rest: personOnVacation,
+                    adjusted: true,
+                    vacationPerson: personOnVacation
+                };
+            }
+            
+            // Si la persona de vacaciones debería trabajar, redistribuir
+            // En este caso, ambos disponibles trabajan y no hay descanso
+            return {
+                sat: availableWorkers[0],
+                sun: availableWorkers[1],
+                rest: personOnVacation,
+                adjusted: true,
+                vacationPerson: personOnVacation
+            };
+        }
+        
+        // Si solo hay 1 disponible (caso extremo)
+        if (availableWorkers.length === 1) {
+            return {
+                sat: availableWorkers[0],
+                sun: availableWorkers[0],
+                rest: "N/A",
+                adjusted: true,
+                vacationPerson: workers.filter(person => person !== availableWorkers[0]).join(" y ")
+            };
+        }
+        
+        // Si no hay nadie disponible (caso extremo)
+        return {
+            sat: "N/A",
+            sun: "N/A",
+            rest: "N/A",
+            adjusted: true,
+            vacationPerson: "Todos"
+        };
+    }
+
+    function getNextWeekend() {
+      const today = new Date();
+      const day = today.getDay();
+      const nextSaturday = new Date(today);
+      nextSaturday.setDate(today.getDate() + ((6 - day + 7) % 7));
+
+      const nextSunday = new Date(nextSaturday);
+      nextSunday.setDate(nextSaturday.getDate() + 1);
+
+      return { saturday: nextSaturday, sunday: nextSunday };
+    }
+
+    // Función para agregar vacaciones
+    function addVacation() {
+        const person = document.getElementById('vacationPerson').value;
+        const start = document.getElementById('vacationStart').value;
+        const end = document.getElementById('vacationEnd').value;
+        
+        if (!start || !end) {
+            showToast('Por favor, selecciona ambas fechas');
+            return;
+        }
+        
+        if (new Date(start) > new Date(end)) {
+            showToast('La fecha de inicio no puede ser posterior a la fecha de fin');
+            return;
+        }
+        
+        // Verificar si ya existe una vacación para esta persona en estas fechas
+        const existingIndex = vacationData.findIndex(v => 
+            v.person === person && v.start === start && v.end === end
+        );
+        
+        if (existingIndex === -1) {
+            vacationData.push({ person, start, end });
+            saveVacationsToStorage();
+            updateVacationList();
+            updateRotation();
+            showToast(`Vacaciones agregadas para ${person}`);
+            
+            // Limpiar los campos
+            document.getElementById('vacationStart').value = '';
+            document.getElementById('vacationEnd').value = '';
+        } else {
+            showToast('Estas vacaciones ya están registradas');
+        }
+    }
+
+    // Función para limpiar todas las vacaciones
+    function clearVacations() {
+        if (confirm('¿Estás seguro de que quieres eliminar todas las vacaciones?')) {
+            vacationData = [];
+            saveVacationsToStorage();
+            updateVacationList();
+            updateRotation();
+            showToast('Todas las vacaciones han sido eliminadas');
+        }
+    }
+
+    // Función para eliminar una vacación específica
+    function removeVacation(index) {
+        const vacation = vacationData[index];
+        if (confirm(`¿Eliminar vacaciones de ${vacation.person} (${formatDate(parseDate(vacation.start))} - ${formatDate(parseDate(vacation.end))})?`)) {
+            vacationData.splice(index, 1);
+            saveVacationsToStorage();
+            updateVacationList();
+            updateRotation();
+            showToast('Vacaciones eliminadas');
+        }
+    }
+
+    // Función para actualizar la lista de vacaciones en la interfaz
+    function updateVacationList() {
+        const vacationList = document.getElementById("vacationList");
+        vacationList.innerHTML = "";
+        
+        if (vacationData.length === 0) {
+            vacationList.innerHTML = "<li>No hay vacaciones programadas</li>";
+            return;
+        }
+        
+        // Ordenar por fecha de inicio
+        const sortedVacations = [...vacationData].sort((a, b) => 
+            new Date(a.start) - new Date(b.start)
+        );
+        
+        sortedVacations.forEach((vacation, index) => {
+            const li = document.createElement("li");
+            const startDate = parseDate(vacation.start);
+            const endDate = parseDate(vacation.end);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const isCurrent = today >= startDate && today <= endDate;
+            const isPast = today > endDate;
+            
+            li.innerHTML = `
+                <span aria-hidden="true">${isCurrent ? "🏖️" : (isPast ? "✅" : "⛱️")}</span>
+                <span class="sr-only">Icono de vacaciones</span>
+                <strong>${vacation.person}:</strong> ${formatDate(startDate)} - ${formatDate(endDate)}
+                ${isCurrent ? " <span style='color: var(--vacation-color);'>(En curso)</span>" : ""}
+                ${isPast ? " <span style='color: var(--text-light);'>(Finalizada)</span>" : ""}
+                <button onclick="removeVacation(${index})" style="margin-left: 10px; background: var(--resting-color); color: white; border: none; border-radius: 4px; padding: 2px 6px; font-size: 0.8em; cursor: pointer;">Eliminar</button>
+            `;
+            vacationList.appendChild(li);
+        });
+    }
+
+    // Función para guardar cambios manuales
+    function saveManualChanges() {
+        const saturdayInput = document.getElementById("saturdayWorker").value.trim();
+        const sundayInput = document.getElementById("sundayWorker").value.trim();
+
+        if (!saturdayInput || !sundayInput) {
+            alert("Por favor, ingresa los nombres de los encargados de sábado y domingo.");
+            return;
+        }
+
+        const allWorkers = ["Marvin", "Eli", "Juan"];
+        const restingPerson = allWorkers.find(person =>
+            person !== saturdayInput && person !== sundayInput
+        ) || "N/A";
+
+        document.getElementById("saturdayName").textContent = saturdayInput;
+        document.getElementById("sundayName").textContent = sundayInput;
+        document.getElementById("restingName").textContent = restingPerson;
+
+        const summaryList = document.getElementById("weeklySummary");
+        summaryList.innerHTML = `
+            <li>${restingPerson} tiene fin de semana libre</li>
+            <li>Cambio manual aplicado</li>
+        `;
+
+        showToast('Cambios manuales guardados');
+    }
+
+    function updateRotation() {
+        const { saturday, sunday } = getNextWeekend();
+        const options = { day: '2-digit', month: '2-digit', year: 'numeric' };
+
+        // Calcular la rotación para la fecha objetivo
+        const baseRotation = calculateRotationForDate(saturday);
+        
+        // Ajustar la rotación según las vacaciones
+        const adjustedRotation = adjustRotationForVacations(baseRotation, saturday);
+        
+        document.getElementById("weekendDates").textContent = `${saturday.toLocaleDateString('es-ES', options)} - ${sunday.toLocaleDateString('es-ES', options)}`;
+        document.getElementById("saturdayName").textContent = adjustedRotation.sat;
+        document.getElementById("sundayName").textContent = adjustedRotation.sun;
+        document.getElementById("restingName").textContent = adjustedRotation.rest;
+
+        // Mostrar información de vacaciones si la rotación fue ajustada
+        const vacationInfo = document.getElementById("vacationInfo");
+        const vacationName = document.getElementById("vacationName");
+        
+        if (adjustedRotation.adjusted) {
+            vacationName.textContent = adjustedRotation.vacationPerson;
+            vacationInfo.style.display = "flex";
+        } else {
+            vacationInfo.style.display = "none";
+        }
+
+        const summaryList = document.getElementById("weeklySummary");
+        
+        if (adjustedRotation.adjusted) {
+            summaryList.innerHTML = `
+                <li>${adjustedRotation.rest} tiene fin de semana libre</li>
+                <li>Ajuste por vacaciones de ${adjustedRotation.vacationPerson}</li>
+            `;
+        } else {
+            summaryList.innerHTML = `
+                <li>${adjustedRotation.rest} tiene fin de semana libre</li>
+                <li>Sin cambios programados esta semana</li>
+            `;
+        }
+
+        const feedbackInfo = getFeedbackInfo(saturday);
+
+        document.getElementById("feedbackDates").textContent = `${saturday.toLocaleDateString('es-ES', options)} - ${sunday.toLocaleDateString('es-ES', options)}`;
+        
+        if (feedbackInfo.last) {
+            document.getElementById("lastFeedback").textContent = `${feedbackInfo.last.person} (${formatDate(feedbackInfo.last.date)})`;
+        } else {
+            document.getElementById("lastFeedback").textContent = "No hay registro previo";
+        }
+
+        if (feedbackInfo.next) {
+            document.getElementById("nextFeedback").textContent = `${feedbackInfo.next.person} (${formatDate(feedbackInfo.next.date)})`;
+        } else {
+            document.getElementById("nextFeedback").textContent = "No hay próxima retro programada";
+        }
+    }
+
+    // Función para mostrar notificación toast
+    function showToast(message) {
+        const toast = document.getElementById('toast');
+        toast.textContent = message;
+        toast.classList.add('show');
+        
+        setTimeout(() => {
+            toast.classList.remove('show');
+        }, 3000);
+    }
+
+    // Función para copiar el panel al portapapeles como imagen
+    async function copyPanelToClipboard(panelId, panelName) {
+        const panelElement = document.getElementById(panelId);
+        if (!panelElement) {
+            console.error(`Panel con ID '${panelId}' no encontrado.`);
+            return;
+        }
+
+        const captureButton = panelElement.querySelector('.capture-button');
+        if (captureButton) {
+            captureButton.style.visibility = 'hidden';
+        }
+
+        try {
+            const canvas = await html2canvas(panelElement, {
+                useCORS: true,
+                scale: 2,
+                logging: false,
+                allowTaint: true,
+            });
+
+            // Convertir el canvas a blob
+            canvas.toBlob(async (blob) => {
+                try {
+                    // Copiar el blob al portapapeles
+                    await navigator.clipboard.write([
+                        new ClipboardItem({
+                            [blob.type]: blob
+                        })
+                    ]);
+                    showToast(`Imagen de "${panelName}" copiada al portapapeles`);
+                } catch (err) {
+                    console.error('Error al copiar al portapapeles:', err);
+                    showToast('Error al copiar la imagen');
+                    
+                    // Fallback: Descargar la imagen si no se puede copiar
+                    const link = document.createElement('a');
+                    link.download = `${panelName || panelId}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }
+            }, 'image/png');
+        } catch (error) {
+            console.error('Error al capturar el panel:', error);
+            showToast('Error al capturar el panel');
+        } finally {
+            if (captureButton) {
+                captureButton.style.visibility = 'visible';
+            }
+        }
+    }
+
+    // Inicializar la aplicación
+    function initApp() {
+        loadVacationsFromStorage();
+        updateVacationList();
+        updateRotation();
+        
+        // Establecer fecha mínima para los inputs de fecha (hoy)
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('vacationStart').min = today;
+        document.getElementById('vacationEnd').min = today;
+    }
+
+    // Inicializar la aplicación al cargar la página
+    initApp();
+  </script>
+</body>
+</html>
